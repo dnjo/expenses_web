@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import {AccountCircle} from "@mui/icons-material";
 import {Container, Menu, MenuItem} from "@mui/material";
 import React from "react";
+import Link from 'next/link'
 
 export default function Layout({ children }: any) {
     const { status } = useSession({
@@ -32,7 +33,7 @@ export default function Layout({ children }: any) {
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            Home
+                            <Link href="/"><a>Home</a></Link>
                         </Typography>
 
                         <div>
