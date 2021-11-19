@@ -10,6 +10,7 @@ import React from "react";
 import Link from 'next/link'
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 export default function Layout({ children }: any) {
     const { status } = useSession({
@@ -91,6 +92,14 @@ export default function Layout({ children }: any) {
                                 <ListItem>
                                     <ListItemIcon><HomeIcon /></ListItemIcon>
                                     <ListItemText>Home</ListItemText>
+                                </ListItem>
+                            </a>
+                        </Link>
+                        <Link href="/expenses" passHref>
+                            <a onClick={() => setMainMenuState(false)}>
+                                <ListItem>
+                                    <ListItemIcon><AttachMoneyIcon /></ListItemIcon>
+                                    <ListItemText>Expenses</ListItemText>
                                 </ListItem>
                             </a>
                         </Link>
