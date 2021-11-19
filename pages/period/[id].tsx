@@ -10,6 +10,7 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import {useRouter} from "next/router";
 import Link from 'next/link'
 
@@ -21,10 +22,20 @@ class ItemContainer extends Component<any, any> {
         this.componentDidMount = this.componentDidMount.bind(this);
     }
 
-    componentDidMount() {
+    fetchStatuses() {
         fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses`)
             .then(response => response.json())
-            .then(json => this.setState({data: json}))
+            .then(json => this.setState({ data: json }))
+    }
+
+    componentDidMount() {
+        this.fetchStatuses()
+    }
+
+    deleteExpenseStatus(id: any) {
+        fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses/${id}`, {
+            method: 'DELETE'
+        }).then(() => this.fetchStatuses())
     }
 
     render() {
@@ -44,6 +55,7 @@ class ItemContainer extends Component<any, any> {
                                 <TableCell>Expense</TableCell>
                                 <TableCell align="right">Amount</TableCell>
                                 <TableCell align="right">Paid</TableCell>
+                                <TableCell align="right">Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -56,6 +68,9 @@ class ItemContainer extends Component<any, any> {
                                     </TableCell>
                                     <TableCell align="right">{row.amount / 100}</TableCell>
                                     <TableCell align="right">{row.paid ? 'Yes' : 'No'}</TableCell>
+                                    <TableCell align="right">
+                                        <a onClick={() => this.deleteExpenseStatus(row.id)} href="#"><DeleteIcon /></a>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
