@@ -22,6 +22,21 @@ class ItemContainer extends Component<any, any> {
             return null
         }
 
+        const months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ]
+
         return (this.state.data.map((i: any) => {
             return (
                 <Link key={i.id} href={`/period/${i.id}`}>
@@ -29,7 +44,7 @@ class ItemContainer extends Component<any, any> {
                         <Card key={i.id} sx={{display: 'flex', minHeight: 140}}>
                             <CardContent>
                                 <Typography variant="h4" color="text.secondary">
-                                    {i.year}-{i.month}
+                                    {months[i.month - 1]}, {i.year}
                                 </Typography>
                             </CardContent>
                         </Card>
