@@ -1,7 +1,8 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {useRouter} from "next/router";
+import Link from "next/link";
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -28,6 +29,9 @@ class ItemContainer extends Component<any, any> {
 
         return (
             <>
+                <Link href="/expenses/new" passHref>
+                    <Button variant="contained">New expense</Button>
+                </Link>
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
                         <TableHead>
