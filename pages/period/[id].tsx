@@ -1,17 +1,17 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
 import {
-    Card,
-    CardContent,
+    Button,
     Paper,
-    Table, TableBody,
+    Table,
+    TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
-    Typography
+    TableRow
 } from "@mui/material";
 import {useRouter} from "next/router";
+import Link from 'next/link'
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -33,30 +33,35 @@ class ItemContainer extends Component<any, any> {
         }
 
         return (
-            <TableContainer component={Paper}>
-                <Table sx={{minWidth: 650}} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Expense</TableCell>
-                            <TableCell align="right">Amount</TableCell>
-                            <TableCell align="right">Paid</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {this.state.data.map((row: any) => (
-                            <TableRow
-                                key={row.id}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}}}>
-                                <TableCell component="th" scope="row">
-                                    {row.expense.title}
-                                </TableCell>
-                                <TableCell align="right">{row.amount}</TableCell>
-                                <TableCell align="right">{row.paid ? 'Yes' : 'No'}</TableCell>
+            <>
+                <Link href={`/period/${this.props.id}/new_expense`} passHref>
+                    <Button variant="contained">New period expense</Button>
+                </Link>
+                <TableContainer component={Paper}>
+                    <Table sx={{minWidth: 650}} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Expense</TableCell>
+                                <TableCell align="right">Amount</TableCell>
+                                <TableCell align="right">Paid</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {this.state.data.map((row: any) => (
+                                <TableRow
+                                    key={row.id}
+                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                                    <TableCell component="th" scope="row">
+                                        {row.expense.title}
+                                    </TableCell>
+                                    <TableCell align="right">{row.amount}</TableCell>
+                                    <TableCell align="right">{row.paid ? 'Yes' : 'No'}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </>
         )
     }
 }
