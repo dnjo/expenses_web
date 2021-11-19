@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {useRouter} from "next/router";
 import Link from "next/link";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -22,6 +23,12 @@ class ItemContainer extends Component<any, any> {
         this.fetchExpenses()
     }
 
+    deleteExpense(id: any) {
+        fetch(`/expenses-api/expenses/${id}`, {
+            method: 'DELETE'
+        }).then(() => this.fetchExpenses())
+    }
+
     render() {
         if (!this.state.data) {
             return null
@@ -37,6 +44,7 @@ class ItemContainer extends Component<any, any> {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Expense</TableCell>
+                                <TableCell align="right">Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -46,6 +54,9 @@ class ItemContainer extends Component<any, any> {
                                     sx={{'&:last-child td, &:last-child th': {border: 0}}}>
                                     <TableCell component="th" scope="row">
                                         {row.title}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <a onClick={() => this.deleteExpense(row.id)} href="#"><DeleteIcon /></a>
                                     </TableCell>
                                 </TableRow>
                             ))}
