@@ -1,6 +1,6 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
-import {Card, CardContent, Typography} from "@mui/material";
+import {Button, Card, CardContent, Typography} from "@mui/material";
 import Link from 'next/link'
 
 class ItemContainer extends Component<any, any> {
@@ -43,6 +43,9 @@ class ItemContainer extends Component<any, any> {
 const Home: NextPage = () => {
     return (
         <>
+            <Link href={`/period/new`} passHref>
+                <Button variant="contained">New period</Button>
+            </Link>
             <ItemContainer/>
         </>
     )
