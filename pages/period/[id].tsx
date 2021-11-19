@@ -11,6 +11,8 @@ import {
     TableRow
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {useRouter} from "next/router";
 import Link from 'next/link'
 
@@ -35,6 +37,12 @@ class ItemContainer extends Component<any, any> {
     deleteExpenseStatus(id: any) {
         fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses/${id}`, {
             method: 'DELETE'
+        }).then(() => this.fetchStatuses())
+    }
+
+    togglePaid(id: any) {
+        fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses/${id}/toggle_paid`, {
+            method: 'PUT'
         }).then(() => this.fetchStatuses())
     }
 
@@ -67,7 +75,11 @@ class ItemContainer extends Component<any, any> {
                                         {row.expense.title}
                                     </TableCell>
                                     <TableCell align="right">{row.amount / 100}</TableCell>
-                                    <TableCell align="right">{row.paid ? 'Yes' : 'No'}</TableCell>
+                                    <TableCell align="right">
+                                        <a onClick={() => this.togglePaid(row.id)} href="#">
+                                            {row.paid ? (<CheckBoxIcon />) : (<CheckBoxOutlineBlankIcon />)}
+                                        </a>
+                                    </TableCell>
                                     <TableCell align="right">
                                         <a onClick={() => this.deleteExpenseStatus(row.id)} href="#"><DeleteIcon /></a>
                                     </TableCell>
