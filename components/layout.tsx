@@ -5,15 +5,18 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import {AccountCircle} from "@mui/icons-material";
-import {Container, Menu, MenuItem} from "@mui/material";
+import {Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import React from "react";
 import Link from 'next/link'
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
 
 export default function Layout({ children }: any) {
     const { status } = useSession({
         required: true
     })
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [mainMenuState, setMainMenuState] = React.useState(false);
 
     const handleMenu = (event: any) => {
         setAnchorEl(event.currentTarget);
@@ -32,8 +35,17 @@ export default function Layout({ children }: any) {
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="static">
                     <Toolbar>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon onClick={() => setMainMenuState(true)} />
+                        </IconButton>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            <Link href="/"><a>Home</a></Link>
+                            <Link href="/"><a>Expenses</a></Link>
                         </Typography>
 
                         <div>
@@ -66,6 +78,25 @@ export default function Layout({ children }: any) {
                     </Toolbar>
                 </AppBar>
             </Box>
+
+            <Drawer
+                anchor="left"
+                open={mainMenuState}
+                onClose={() => setMainMenuState(false)}
+            >
+                <Box role="presentation" sx={{ width: 250 }}>
+                    <List>
+                        <Link href="/" passHref>
+                            <a onClick={() => setMainMenuState(false)}>
+                                <ListItem>
+                                    <ListItemIcon><HomeIcon /></ListItemIcon>
+                                    <ListItemText>Home</ListItemText>
+                                </ListItem>
+                            </a>
+                        </Link>
+                    </List>
+                </Box>
+            </Drawer>
 
             <Container sx={{ marginTop: 2 }}>
                 {children}
