@@ -54,7 +54,7 @@ class ItemContainer extends Component<any, any> {
                                     <TableCell component="th" scope="row">
                                         {row.expense.title}
                                     </TableCell>
-                                    <TableCell align="right">{row.amount}</TableCell>
+                                    <TableCell align="right">{row.amount / 100}</TableCell>
                                     <TableCell align="right">{row.paid ? 'Yes' : 'No'}</TableCell>
                                 </TableRow>
                             ))}
