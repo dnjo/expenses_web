@@ -46,6 +46,12 @@ class ItemContainer extends Component<any, any> {
         }).then(() => this.fetchStatuses())
     }
 
+    deleteTimePeriod(id: any) {
+        fetch(`/expenses-api/time_periods/${id}`, {
+            method: 'DELETE'
+        }).then(() => this.props.onDelete())
+    }
+
     render() {
         if (!this.state.data) {
             return null
@@ -56,6 +62,7 @@ class ItemContainer extends Component<any, any> {
                 <Link href={`/period/${this.props.id}/new_expense`} passHref>
                     <Button variant="contained">New period expense</Button>
                 </Link>
+                <Button onClick={() => this.deleteTimePeriod(this.props.id)} variant="contained" color="error">Delete period</Button>
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
                         <TableHead>
@@ -99,7 +106,7 @@ const Id: NextPage = () => {
 
     return (
         <>
-            <ItemContainer id={id}/>
+            <ItemContainer id={id} onDelete={() => router.push('/')}/>
         </>
     )
 }
