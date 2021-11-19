@@ -2,7 +2,7 @@ import type {NextPage} from 'next'
 import React, {Component} from "react";
 import {
     Button,
-    Paper,
+    Paper, SpeedDial, SpeedDialIcon,
     Table,
     TableBody,
     TableCell,
@@ -60,7 +60,11 @@ class ItemContainer extends Component<any, any> {
         return (
             <>
                 <Link href={`/period/${this.props.id}/new_expense`} passHref>
-                    <Button variant="contained">New period expense</Button>
+                    <SpeedDial
+                        ariaLabel="New expense dial"
+                        sx={{ position: 'absolute', bottom: 50, right: 50 }}
+                        icon={<SpeedDialIcon />}
+                    />
                 </Link>
                 <Button onClick={() => this.deleteTimePeriod(this.props.id)} variant="contained" color="error">Delete period</Button>
                 <TableContainer component={Paper}>

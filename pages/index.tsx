@@ -1,6 +1,6 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
-import {Button, Card, CardContent, Typography} from "@mui/material";
+import {Button, Card, CardContent, SpeedDial, SpeedDialIcon, Typography} from "@mui/material";
 import Link from 'next/link'
 
 class ItemContainer extends Component<any, any> {
@@ -59,7 +59,11 @@ const Home: NextPage = () => {
     return (
         <>
             <Link href={`/period/new`} passHref>
-                <Button variant="contained">New period</Button>
+                <SpeedDial
+                    ariaLabel="New time period dial"
+                    sx={{ position: 'absolute', bottom: 50, right: 50 }}
+                    icon={<SpeedDialIcon />}
+                />
             </Link>
             <ItemContainer/>
         </>
