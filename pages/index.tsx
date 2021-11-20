@@ -3,8 +3,8 @@ import React, {Component} from "react";
 import {
     Button,
     Card,
-    CardContent,
-    Paper,
+    CardContent, FormControl, InputLabel, MenuItem,
+    Paper, Select,
     SpeedDial,
     SpeedDialIcon, Table, TableBody, TableCell, TableContainer,
     TableHead,
@@ -14,7 +14,79 @@ import {
 import Link from 'next/link'
 import DeleteIcon from "@mui/icons-material/Delete";
 import MuiLink from '@mui/material/Link';
-import {apiDelete, apiGet} from "../common";
+import {apiDelete, apiGet, apiPost} from "../common";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import TextField from "@mui/material/TextField";
+import DialogActions from "@mui/material/DialogActions";
+import {useRouter} from "next/router";
+
+class NewTimePeriodForm extends Component<any, any> {
+    constructor(props: any) {
+        super(props);
+
+        this.state = { open: false, year: new Date().getFullYear(), month: 1 }
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    handleSubmit() {
+        const data = {
+            year: parseInt(this.state.year),
+            month: parseInt(this.state.month)
+        }
+        apiPost('time_periods', data)
+            .then(response => response.json())
+            .then((period) => this.props.onSubmitSuccess(period.id))
+    }
+
+    render() {
+        return (
+            <div>
+                <Dialog open={this.props.open} onClose={this.props.handleClose}>
+                    <DialogTitle>New time period</DialogTitle>
+                    <DialogContent sx={{ width: 350 }}>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="year"
+                            label="Year"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                            value={this.state.year}
+                            onChange={(e) => this.setState({ year: e.target.value })}
+                        />
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel>Month</InputLabel>
+                            <Select
+                                value={this.state.month}
+                                onChange={(e) => this.setState({ month: e.target.value })}>
+                                <MenuItem value={1}>January</MenuItem>
+                                <MenuItem value={2}>February</MenuItem>
+                                <MenuItem value={3}>March</MenuItem>
+                                <MenuItem value={4}>April</MenuItem>
+                                <MenuItem value={5}>May</MenuItem>
+                                <MenuItem value={6}>June</MenuItem>
+                                <MenuItem value={7}>July</MenuItem>
+                                <MenuItem value={8}>August</MenuItem>
+                                <MenuItem value={9}>September</MenuItem>
+                                <MenuItem value={10}>October</MenuItem>
+                                <MenuItem value={11}>November</MenuItem>
+                                <MenuItem value={12}>December</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.props.handleClose}>Cancel</Button>
+                        <Button onClick={this.handleSubmit}>Create</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        )
+    }
+}
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -98,15 +170,21 @@ class ItemContainer extends Component<any, any> {
 }
 
 const Home: NextPage = () => {
+    const [open, setOpen] = React.useState(false)
+    const router = useRouter()
+
     return (
         <>
-            <Link href={`/periods/new`} passHref>
-                <SpeedDial
-                    ariaLabel="New time period dial"
-                    sx={{ position: 'absolute', bottom: 50, right: 50 }}
-                    icon={<SpeedDialIcon />}
-                />
-            </Link>
+            <NewTimePeriodForm
+                open={open}
+                handleClose={() => setOpen(false)}
+                onSubmitSuccess={(id: any) => router.push(`/periods/${id}`)} />
+            <SpeedDial
+                onClick={() => setOpen(true)}
+                ariaLabel="New time period dial"
+                sx={{ position: 'absolute', bottom: 50, right: 50 }}
+                icon={<SpeedDialIcon />}
+            />
             <ItemContainer/>
         </>
     )
