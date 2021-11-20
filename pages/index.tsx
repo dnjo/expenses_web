@@ -73,7 +73,7 @@ class ItemContainer extends Component<any, any> {
                                 key={row.id}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}>
                                 <TableCell component="th" scope="row">
-                                    <Link key={row.id} href={`/period/${row.id}`}>
+                                    <Link key={row.id} href={`/periods/${row.id}`}>
                                         <a>
                                             {months[row.month - 1]}, {row.year}
                                         </a>
@@ -94,7 +94,7 @@ class ItemContainer extends Component<any, any> {
 const Home: NextPage = () => {
     return (
         <>
-            <Link href={`/period/new`} passHref>
+            <Link href={`/periods/new`} passHref>
                 <SpeedDial
                     ariaLabel="New time period dial"
                     sx={{ position: 'absolute', bottom: 50, right: 50 }}

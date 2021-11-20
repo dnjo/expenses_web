@@ -64,7 +64,7 @@ const NewExpense: NextPage = () => {
     const router = useRouter()
     const {id} = router.query
 
-    const routeToPeriod = () => router.push(`/period/${id}`)
+    const routeToPeriod = () => router.push(`/periods/${id}`)
 
     return (
         <>

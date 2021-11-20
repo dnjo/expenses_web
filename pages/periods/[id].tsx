@@ -102,7 +102,7 @@ const Id: NextPage = () => {
 
     return (
         <>
-            <Link href={`/period/${id}/new_expense`} passHref>
+            <Link href={`/periods/${id}/new_expense`} passHref>
                 <SpeedDial
                     ariaLabel="New expense dial"
                     sx={{ position: 'absolute', bottom: 50, right: 50 }}

@@ -66,7 +66,7 @@ class FormContainer extends Component<any, any> {
 const NewPeriod: NextPage = () => {
     const router = useRouter()
     const routeToNewPeriod = (id: any) => {
-        router.push(`/period/${id}`)
+        router.push(`/periods/${id}`)
     }
 
     return (
