@@ -27,7 +27,7 @@ class NewTimePeriodForm extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
-        this.state = { open: false, year: new Date().getFullYear(), month: 1 }
+        this.state = { year: new Date().getFullYear(), month: 1 }
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
