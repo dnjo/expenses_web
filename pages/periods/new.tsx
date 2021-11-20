@@ -2,6 +2,7 @@ import {NextPage} from "next";
 import React, {Component} from "react";
 import {Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
 import {useRouter} from "next/router";
+import {apiPost} from "../../common";
 
 class FormContainer extends Component<any, any> {
     constructor(props: any) {
@@ -16,13 +17,7 @@ class FormContainer extends Component<any, any> {
             year: parseInt(this.state.year),
             month: parseInt(this.state.month)
         }
-        fetch('/expenses-api/time_periods', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        apiPost('time_periods', data)
             .then(response => response.json())
             .then((period) => this.props.onSubmitSuccess(period.id))
     }

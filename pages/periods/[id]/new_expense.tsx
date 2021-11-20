@@ -2,6 +2,7 @@ import {NextPage} from "next";
 import React, {Component, useState} from "react";
 import {Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
 import {useRouter} from "next/router";
+import {apiGet, apiPost} from "../../../common";
 
 class FormContainer extends Component<any, any> {
     constructor(props: any) {
@@ -13,9 +14,9 @@ class FormContainer extends Component<any, any> {
     }
 
     componentDidMount() {
-        fetch('/expenses-api/expenses')
+        apiGet('expenses')
             .then(response => response.json())
-            .then(json => this.setState({data: json}))
+            .then(json => this.setState({ data: json }))
     }
 
     handleSubmit(event: any) {
@@ -23,13 +24,7 @@ class FormContainer extends Component<any, any> {
             expense_id: this.state.expense,
             amount: parseInt(this.state.amount) * 100
         }
-        fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        apiPost(`time_periods/${this.props.id}/expense_statuses`, data)
             .then(response => response.json())
             .then(() => this.props.onSubmitSuccess())
     }

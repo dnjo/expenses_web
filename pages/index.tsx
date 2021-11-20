@@ -14,6 +14,7 @@ import {
 import Link from 'next/link'
 import DeleteIcon from "@mui/icons-material/Delete";
 import MuiLink from '@mui/material/Link';
+import {apiDelete, apiGet} from "../common";
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -24,9 +25,9 @@ class ItemContainer extends Component<any, any> {
     }
 
     fetchTimePeriods() {
-        fetch('/expenses-api/time_periods')
+        apiGet('time_periods')
             .then(response => response.json())
-            .then(json => this.setState({data: json}))
+            .then(json => this.setState({ data: json }))
     }
 
     componentDidMount() {
@@ -34,9 +35,8 @@ class ItemContainer extends Component<any, any> {
     }
 
     deleteTimePeriod(id: any) {
-        fetch(`/expenses-api/time_periods/${id}`, {
-            method: 'DELETE'
-        }).then(() => this.fetchTimePeriods())
+        apiDelete(`time_periods/${id}`)
+            .then(() => this.fetchTimePeriods())
     }
 
     render() {
@@ -76,7 +76,7 @@ class ItemContainer extends Component<any, any> {
                                 <TableCell component="th" scope="row">
                                     <Link key={row.id} href={`/periods/${row.id}`}>
                                         <a>
-                                            {months[row.month - 1]}, {row.year}
+                                            {months[row.month - 1]} {row.year}
                                         </a>
                                     </Link>
                                 </TableCell>

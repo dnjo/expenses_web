@@ -15,6 +15,7 @@ import {useRouter} from "next/router";
 import Link from "next/link";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MuiLink from '@mui/material/Link';
+import {apiDelete, apiGet} from "../../common";
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -25,7 +26,7 @@ class ItemContainer extends Component<any, any> {
     }
 
     fetchExpenses() {
-        fetch('/expenses-api/expenses')
+        apiGet('expenses')
             .then(response => response.json())
             .then(json => this.setState({ data: json }))
     }
@@ -35,9 +36,8 @@ class ItemContainer extends Component<any, any> {
     }
 
     deleteExpense(id: any) {
-        fetch(`/expenses-api/expenses/${id}`, {
-            method: 'DELETE'
-        }).then(() => this.fetchExpenses())
+        apiDelete(`expenses/${id}`)
+            .then(() => this.fetchExpenses())
     }
 
     render() {

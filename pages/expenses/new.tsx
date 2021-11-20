@@ -2,6 +2,7 @@ import {NextPage} from "next";
 import React, {Component} from "react";
 import {Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
 import {useRouter} from "next/router";
+import {apiPost} from "../../common";
 
 class FormContainer extends Component<any, any> {
     constructor(props: any) {
@@ -14,13 +15,7 @@ class FormContainer extends Component<any, any> {
         const data = {
             title: this.state.title
         }
-        fetch('/expenses-api/expenses', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        apiPost('expenses', data)
             .then(() => this.props.onSubmitSuccess())
     }
 

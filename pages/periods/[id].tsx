@@ -16,6 +16,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import MuiLink from '@mui/material/Link';
+import {apiDelete, apiGet, apiPut} from "../../common";
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -26,7 +27,7 @@ class ItemContainer extends Component<any, any> {
     }
 
     fetchStatuses() {
-        fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses`)
+        apiGet(`time_periods/${this.props.id}/expense_statuses`)
             .then(response => response.json())
             .then(json => this.setState({ data: json }))
     }
@@ -36,15 +37,13 @@ class ItemContainer extends Component<any, any> {
     }
 
     deleteExpenseStatus(id: any) {
-        fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses/${id}`, {
-            method: 'DELETE'
-        }).then(() => this.fetchStatuses())
+        apiDelete(`time_periods/${this.props.id}/expense_statuses/${id}`)
+            .then(() => this.fetchStatuses())
     }
 
     togglePaid(id: any) {
-        fetch(`/expenses-api/time_periods/${this.props.id}/expense_statuses/${id}/toggle_paid`, {
-            method: 'PUT'
-        }).then(() => this.fetchStatuses())
+        apiPut(`time_periods/${this.props.id}/expense_statuses/${id}/toggle_paid`)
+            .then(() => this.fetchStatuses())
     }
 
     render() {
