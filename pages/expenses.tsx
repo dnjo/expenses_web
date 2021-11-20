@@ -1,8 +1,8 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
 import {
-    Button,
-    Paper,
+    Button, FormControl, InputLabel, MenuItem,
+    Paper, Select,
     SpeedDial, SpeedDialIcon,
     Table,
     TableBody,
@@ -15,14 +15,66 @@ import {useRouter} from "next/router";
 import Link from "next/link";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MuiLink from '@mui/material/Link';
-import {apiDelete, apiGet} from "../../common";
+import {apiDelete, apiGet, apiPost} from "../common";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import TextField from "@mui/material/TextField";
+import DialogActions from "@mui/material/DialogActions";
+
+class NewExpenseForm extends Component<any, any> {
+    constructor(props: any) {
+        super(props);
+
+        this.state = { data: null }
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    handleSubmit() {
+        const data = {
+            title: this.state.title
+        }
+        apiPost('expenses', data)
+            .then(() => {
+                this.props.onSubmitSuccess()
+                this.props.handleClose()
+            })
+    }
+
+    render() {
+        return (
+            <div>
+                <Dialog open={this.props.open} onClose={this.props.handleClose}>
+                    <DialogTitle>New expense</DialogTitle>
+                    <DialogContent sx={{ width: 350 }}>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="expense-title"
+                            label="Title"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            onChange={(e) => this.setState({ title: e.target.value })}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.props.handleClose}>Cancel</Button>
+                        <Button onClick={this.handleSubmit}>Create</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        )
+    }
+}
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
         this.state = {}
-        this.componentDidMount = this.componentDidMount.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this)
+        this.fetchExpenses = this.fetchExpenses.bind(this)
     }
 
     fetchExpenses() {
@@ -47,13 +99,10 @@ class ItemContainer extends Component<any, any> {
 
         return (
             <>
-                <Link href={`/expenses/new`} passHref>
-                    <SpeedDial
-                        ariaLabel="New expense dial"
-                        sx={{ position: 'absolute', bottom: 50, right: 50 }}
-                        icon={<SpeedDialIcon />}
-                    />
-                </Link>
+                <NewExpenseForm
+                    open={this.props.open}
+                    handleClose={this.props.handleClose}
+                    onSubmitSuccess={this.fetchExpenses} />
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
                         <TableHead>
@@ -89,12 +138,19 @@ class ItemContainer extends Component<any, any> {
 }
 
 const Expenses: NextPage = () => {
-    const router = useRouter()
-    const {id} = router.query
+    const [open, setOpen] = React.useState(false)
 
     return (
         <>
-            <ItemContainer id={id}/>
+            <SpeedDial
+                onClick={() => setOpen(true)}
+                ariaLabel="New expense dial"
+                sx={{ position: 'absolute', bottom: 50, right: 50 }}
+                icon={<SpeedDialIcon />}
+            />
+            <ItemContainer
+                open={open}
+                handleClose={() => setOpen(false)} />
         </>
     )
 }
