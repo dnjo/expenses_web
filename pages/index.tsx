@@ -1,7 +1,18 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
-import {Button, Card, CardContent, SpeedDial, SpeedDialIcon, Typography} from "@mui/material";
+import {
+    Button,
+    Card,
+    CardContent,
+    Paper,
+    SpeedDial,
+    SpeedDialIcon, Table, TableBody, TableCell, TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from "@mui/material";
 import Link from 'next/link'
+import DeleteIcon from "@mui/icons-material/Delete";
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -11,10 +22,20 @@ class ItemContainer extends Component<any, any> {
         this.componentDidMount = this.componentDidMount.bind(this);
     }
 
-    componentDidMount() {
+    fetchTimePeriods() {
         fetch('/expenses-api/time_periods')
             .then(response => response.json())
             .then(json => this.setState({data: json}))
+    }
+
+    componentDidMount() {
+        this.fetchTimePeriods()
+    }
+
+    deleteTimePeriod(id: any) {
+        fetch(`/expenses-api/time_periods/${id}`, {
+            method: 'DELETE'
+        }).then(() => this.fetchTimePeriods())
     }
 
     render() {
@@ -37,21 +58,36 @@ class ItemContainer extends Component<any, any> {
             'December'
         ]
 
-        return (this.state.data.map((i: any) => {
-            return (
-                <Link key={i.id} href={`/period/${i.id}`}>
-                    <a>
-                        <Card key={i.id} sx={{display: 'flex', minHeight: 140}}>
-                            <CardContent>
-                                <Typography variant="h4" color="text.secondary">
-                                    {months[i.month - 1]}, {i.year}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </a>
-                </Link>
-            )
-        }))
+        return (
+            <TableContainer component={Paper}>
+                <Table sx={{minWidth: 650}} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Time period</TableCell>
+                            <TableCell align="right">Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {this.state.data.map((row: any) => (
+                            <TableRow
+                                key={row.id}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                                <TableCell component="th" scope="row">
+                                    <Link key={row.id} href={`/period/${row.id}`}>
+                                        <a>
+                                            {months[row.month - 1]}, {row.year}
+                                        </a>
+                                    </Link>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <a onClick={() => this.deleteTimePeriod(row.id)} href="#"><DeleteIcon /></a>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        )
     }
 }
 

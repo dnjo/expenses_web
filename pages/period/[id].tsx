@@ -59,14 +59,6 @@ class ItemContainer extends Component<any, any> {
 
         return (
             <>
-                <Link href={`/period/${this.props.id}/new_expense`} passHref>
-                    <SpeedDial
-                        ariaLabel="New expense dial"
-                        sx={{ position: 'absolute', bottom: 50, right: 50 }}
-                        icon={<SpeedDialIcon />}
-                    />
-                </Link>
-                <Button onClick={() => this.deleteTimePeriod(this.props.id)} variant="contained" color="error">Delete period</Button>
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
                         <TableHead>
@@ -110,6 +102,13 @@ const Id: NextPage = () => {
 
     return (
         <>
+            <Link href={`/period/${id}/new_expense`} passHref>
+                <SpeedDial
+                    ariaLabel="New expense dial"
+                    sx={{ position: 'absolute', bottom: 50, right: 50 }}
+                    icon={<SpeedDialIcon />}
+                />
+            </Link>
             <ItemContainer id={id} onDelete={() => router.push('/')}/>
         </>
     )
