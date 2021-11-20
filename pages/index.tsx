@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import Link from 'next/link'
 import DeleteIcon from "@mui/icons-material/Delete";
+import MuiLink from '@mui/material/Link';
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -80,7 +81,12 @@ class ItemContainer extends Component<any, any> {
                                     </Link>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <a onClick={() => this.deleteTimePeriod(row.id)} href="#"><DeleteIcon /></a>
+                                    <MuiLink
+                                        component="button"
+                                        color="inherit"
+                                        onClick={() => this.deleteTimePeriod(row.id)}>
+                                        <DeleteIcon />
+                                    </MuiLink>
                                 </TableCell>
                             </TableRow>
                         ))}

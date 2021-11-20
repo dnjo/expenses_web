@@ -14,6 +14,7 @@ import {
 import {useRouter} from "next/router";
 import Link from "next/link";
 import DeleteIcon from '@mui/icons-material/Delete';
+import MuiLink from '@mui/material/Link';
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -70,7 +71,12 @@ class ItemContainer extends Component<any, any> {
                                         {row.title}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <a onClick={() => this.deleteExpense(row.id)} href="#"><DeleteIcon /></a>
+                                        <MuiLink
+                                            component="button"
+                                            color="inherit"
+                                            onClick={() => this.deleteExpense(row.id)}>
+                                            <DeleteIcon />
+                                        </MuiLink>
                                     </TableCell>
                                 </TableRow>
                             ))}

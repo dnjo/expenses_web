@@ -1,7 +1,7 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
 import {
-    Button,
+    Button, IconButton,
     Paper, SpeedDial, SpeedDialIcon,
     Table,
     TableBody,
@@ -15,6 +15,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {useRouter} from "next/router";
 import Link from 'next/link'
+import MuiLink from '@mui/material/Link';
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -46,12 +47,6 @@ class ItemContainer extends Component<any, any> {
         }).then(() => this.fetchStatuses())
     }
 
-    deleteTimePeriod(id: any) {
-        fetch(`/expenses-api/time_periods/${id}`, {
-            method: 'DELETE'
-        }).then(() => this.props.onDelete())
-    }
-
     render() {
         if (!this.state.data) {
             return null
@@ -79,12 +74,17 @@ class ItemContainer extends Component<any, any> {
                                     </TableCell>
                                     <TableCell align="right">{row.amount / 100}</TableCell>
                                     <TableCell align="right">
-                                        <a onClick={() => this.togglePaid(row.id)} href="#">
+                                        <MuiLink component="button" color="inherit" onClick={() => this.togglePaid(row.id)}>
                                             {row.paid ? (<CheckBoxIcon />) : (<CheckBoxOutlineBlankIcon />)}
-                                        </a>
+                                        </MuiLink>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <a onClick={() => this.deleteExpenseStatus(row.id)} href="#"><DeleteIcon /></a>
+                                        <MuiLink
+                                            component="button"
+                                            color="inherit"
+                                            onClick={() => this.deleteExpenseStatus(row.id)}>
+                                            <DeleteIcon />
+                                        </MuiLink>
                                     </TableCell>
                                 </TableRow>
                             ))}
