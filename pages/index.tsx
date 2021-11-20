@@ -22,6 +22,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import {useRouter} from "next/router";
+import ConfirmDialog from "../components/confirm-dialog";
 
 class NewTimePeriodForm extends Component<any, any> {
     constructor(props: any) {
@@ -132,39 +133,47 @@ class ItemContainer extends Component<any, any> {
         ]
 
         return (
-            <TableContainer component={Paper}>
-                <Table sx={{minWidth: 650}} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Time period</TableCell>
-                            <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {this.state.data.map((row: any) => (
-                            <TableRow
-                                key={row.id}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}}}>
-                                <TableCell component="th" scope="row">
-                                    <Link key={row.id} href={`/periods/${row.id}`}>
-                                        <a>
-                                            {months[row.month - 1]} {row.year}
-                                        </a>
-                                    </Link>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <MuiLink
-                                        component="button"
-                                        color="inherit"
-                                        onClick={() => this.deleteTimePeriod(row.id)}>
-                                        <DeleteIcon />
-                                    </MuiLink>
-                                </TableCell>
+            <>
+                <ConfirmDialog
+                    open={this.state.confirmDeleteId}
+                    title="Delete time period?"
+                    handleClose={() => this.setState( { confirmDeleteId: null })}
+                    handleConfirm={() => this.deleteTimePeriod(this.state.confirmDeleteId)}
+                />
+                <TableContainer component={Paper}>
+                    <Table sx={{minWidth: 650}} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Time period</TableCell>
+                                <TableCell align="right">Actions</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {this.state.data.map((row: any) => (
+                                <TableRow
+                                    key={row.id}
+                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                                    <TableCell component="th" scope="row">
+                                        <Link key={row.id} href={`/periods/${row.id}`}>
+                                            <a>
+                                                {months[row.month - 1]} {row.year}
+                                            </a>
+                                        </Link>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <MuiLink
+                                            component="button"
+                                            color="inherit"
+                                            onClick={() => this.setState({ confirmDeleteId: row.id })}>
+                                            <DeleteIcon />
+                                        </MuiLink>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </>
         )
     }
 }

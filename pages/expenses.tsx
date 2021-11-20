@@ -21,6 +21,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
+import ConfirmDialog from "../components/confirm-dialog";
 
 class NewExpenseForm extends Component<any, any> {
     constructor(props: any) {
@@ -103,6 +104,12 @@ class ItemContainer extends Component<any, any> {
                     open={this.props.open}
                     handleClose={this.props.handleClose}
                     onSubmitSuccess={this.fetchExpenses} />
+                <ConfirmDialog
+                    open={this.state.confirmDeleteId}
+                    title="Delete expense?"
+                    handleClose={() => this.setState( { confirmDeleteId: null })}
+                    handleConfirm={() => this.deleteExpense(this.state.confirmDeleteId)}
+                />
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
                         <TableHead>
@@ -123,7 +130,7 @@ class ItemContainer extends Component<any, any> {
                                         <MuiLink
                                             component="button"
                                             color="inherit"
-                                            onClick={() => this.deleteExpense(row.id)}>
+                                            onClick={() => this.setState({ confirmDeleteId: row.id })}>
                                             <DeleteIcon />
                                         </MuiLink>
                                     </TableCell>
