@@ -106,10 +106,10 @@ class NewTimePeriodForm extends Component<any, any> {
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
-        super(props);
+        super(props)
 
         this.state = { confirmDeleteOpen: false }
-        this.componentDidMount = this.componentDidMount.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this)
         this.openConfirmDialog = this.openConfirmDialog.bind(this)
         this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
     }

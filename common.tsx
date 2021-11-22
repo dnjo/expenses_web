@@ -1,6 +1,12 @@
 function apiFetch(path: string, options: RequestInit) {
     options.credentials = 'include'
     return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${path}`, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Fetch response was not ok')
+            }
+            return response
+        })
 }
 
 export const apiGet = function(path: string) {

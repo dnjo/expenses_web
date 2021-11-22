@@ -51,8 +51,8 @@ class NewExpenseStatusForm extends Component<any, any> {
         }
         apiPost(`time_periods/${this.props.id}/expense_statuses`, data)
             .then(response => response.json())
-            .then(() => {
-                this.props.onSubmitSuccess()
+            .then((expenseStatus) => {
+                this.props.onSubmitSuccess(expenseStatus)
                 this.props.handleClose()
             })
     }
@@ -105,29 +105,41 @@ class ItemContainer extends Component<any, any> {
 
         this.state = { confirmDeleteOpen: false }
         this.componentDidMount = this.componentDidMount.bind(this)
-        this.fetchStatuses = this.fetchStatuses.bind(this)
         this.openConfirmDialog = this.openConfirmDialog.bind(this)
         this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
+        this.addExpenseStatus = this.addExpenseStatus.bind(this)
     }
 
-    fetchStatuses() {
+    componentDidMount() {
         apiGet(`time_periods/${this.props.id}/expense_statuses`)
             .then(response => response.json())
             .then(json => this.setState({ data: json }))
     }
 
-    componentDidMount() {
-        this.fetchStatuses()
+    addExpenseStatus(expenseStatus: any) {
+        const expenses = [...this.state.data, expenseStatus]
+        this.setState({ data: expenses })
     }
 
     deleteExpenseStatus(id: any) {
         apiDelete(`time_periods/${this.props.id}/expense_statuses/${id}`)
-            .then(() => this.fetchStatuses())
+            .then(() => {
+                const expenses = this.state.data.filter((e: any) => e.id !== id)
+                this.setState({ data: expenses })
+            })
     }
 
     togglePaid(id: any) {
         apiPut(`time_periods/${this.props.id}/expense_statuses/${id}/toggle_paid`)
-            .then(() => this.fetchStatuses())
+            .then(() => {
+                const expenses = this.state.data.map((expense: any) => {
+                    if (expense.id === id) {
+                        expense.paid = !expense.paid
+                    }
+                    return expense
+                })
+                this.setState({ data: expenses })
+            })
     }
 
     openConfirmDialog(object: any) {
@@ -149,7 +161,7 @@ class ItemContainer extends Component<any, any> {
                 <NewExpenseStatusForm
                     open={this.props.open}
                     handleClose={this.props.handleClose}
-                    onSubmitSuccess={this.fetchStatuses}
+                    onSubmitSuccess={this.addExpenseStatus}
                     id={this.props.id} />
                 <ConfirmDialog
                     open={this.state.confirmDeleteOpen}
