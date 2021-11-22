@@ -1,9 +1,10 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
 import {
-    Button, FormControl, InputLabel, MenuItem,
-    Paper, Select,
-    SpeedDial, SpeedDialIcon,
+    Button,
+    Paper,
+    SpeedDial,
+    SpeedDialIcon,
     Table,
     TableBody,
     TableCell,
@@ -11,8 +12,6 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
-import {useRouter} from "next/router";
-import Link from "next/link";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MuiLink from '@mui/material/Link';
 import {apiDelete, apiGet, apiPost} from "../common";
@@ -36,8 +35,9 @@ class NewExpenseForm extends Component<any, any> {
             title: this.state.title
         }
         apiPost('expenses', data)
-            .then(() => {
-                this.props.onSubmitSuccess()
+            .then(response => response.json())
+            .then(expense => {
+                this.props.onSubmitSuccess(expense)
                 this.props.handleClose()
             })
     }
@@ -71,28 +71,32 @@ class NewExpenseForm extends Component<any, any> {
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
-        super(props);
+        super(props)
 
         this.state = { confirmDeleteOpen: false }
         this.componentDidMount = this.componentDidMount.bind(this)
-        this.fetchExpenses = this.fetchExpenses.bind(this)
         this.openConfirmDialog = this.openConfirmDialog.bind(this)
         this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
+        this.addExpense = this.addExpense.bind(this)
     }
 
-    fetchExpenses() {
+    componentDidMount() {
         apiGet('expenses')
             .then(response => response.json())
             .then(json => this.setState({ data: json }))
     }
 
-    componentDidMount() {
-        this.fetchExpenses()
-    }
-
     deleteExpense(id: any) {
         apiDelete(`expenses/${id}`)
-            .then(() => this.fetchExpenses())
+            .then(() => {
+                const expenses = this.state.data.filter((e: any) => e.id !== id)
+                this.setState({ data: expenses })
+            })
+    }
+
+    addExpense(expense: any) {
+        const expenses = [...this.state.data, expense]
+        this.setState({ data: expenses })
     }
 
     openConfirmDialog(object: any) {
@@ -114,7 +118,7 @@ class ItemContainer extends Component<any, any> {
                 <NewExpenseForm
                     open={this.props.open}
                     handleClose={this.props.handleClose}
-                    onSubmitSuccess={this.fetchExpenses} />
+                    onSubmitSuccess={this.addExpense} />
                 <ConfirmDialog
                     open={this.state.confirmDeleteOpen}
                     title="Delete expense"
