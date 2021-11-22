@@ -2,14 +2,19 @@ import type {NextPage} from 'next'
 import React, {Component} from "react";
 import {
     Button,
-    Card,
-    CardContent, FormControl, InputLabel, MenuItem,
-    Paper, Select,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
     SpeedDial,
-    SpeedDialIcon, Table, TableBody, TableCell, TableContainer,
+    SpeedDialIcon,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
     TableHead,
-    TableRow,
-    Typography
+    TableRow
 } from "@mui/material";
 import Link from 'next/link'
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -18,7 +23,6 @@ import {apiDelete, apiGet, apiPost} from "../common";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import {useRouter} from "next/router";
@@ -114,19 +118,18 @@ class ItemContainer extends Component<any, any> {
         this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
     }
 
-    fetchTimePeriods() {
+    componentDidMount() {
         apiGet('time_periods')
             .then(response => response.json())
             .then(json => this.setState({ data: json }))
     }
 
-    componentDidMount() {
-        this.fetchTimePeriods()
-    }
-
     deleteTimePeriod(id: any) {
         apiDelete(`time_periods/${id}`)
-            .then(() => this.fetchTimePeriods())
+            .then(() => {
+                const timePeriods = this.state.data.filter((t: any) => t.id !== id)
+                this.setState({ data: timePeriods })
+            })
     }
 
     openConfirmDialog(object: any) {
