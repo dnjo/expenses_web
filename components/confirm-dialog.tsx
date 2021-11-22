@@ -39,7 +39,7 @@ export default class ConfirmDialog extends Component<any, any> {
                     )}
                     <DialogActions>
                         <Button onClick={this.props.handleClose}>Cancel</Button>
-                        <Button onClick={this.handleConfirm} autoFocus>Delete</Button>
+                        <Button color="error" onClick={this.handleConfirm} autoFocus>Delete</Button>
                     </DialogActions>
                 </Dialog>
             </div>
