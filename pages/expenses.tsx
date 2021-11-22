@@ -168,7 +168,7 @@ const Expenses: NextPage = () => {
             <SpeedDial
                 onClick={() => setOpen(true)}
                 ariaLabel="New expense dial"
-                sx={{ position: 'absolute', bottom: 50, right: 50 }}
+                sx={{ position: 'fixed', bottom: 50, right: 50 }}
                 icon={<SpeedDialIcon />}
             />
             <ItemContainer

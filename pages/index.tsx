@@ -211,7 +211,7 @@ const Home: NextPage = () => {
             <SpeedDial
                 onClick={() => setOpen(true)}
                 ariaLabel="New time period dial"
-                sx={{ position: 'absolute', bottom: 50, right: 50 }}
+                sx={{ position: 'fixed', bottom: 50, right: 50 }}
                 icon={<SpeedDialIcon />}
             />
             <ItemContainer/>
