@@ -24,6 +24,21 @@ import DialogActions from "@mui/material/DialogActions";
 import {useRouter} from "next/router";
 import ConfirmDialog from "../components/confirm-dialog";
 
+const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+]
+
 class NewTimePeriodForm extends Component<any, any> {
     constructor(props: any) {
         super(props);
@@ -93,8 +108,10 @@ class ItemContainer extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
-        this.state = {}
+        this.state = { confirmDeleteOpen: false }
         this.componentDidMount = this.componentDidMount.bind(this);
+        this.openConfirmDialog = this.openConfirmDialog.bind(this)
+        this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
     }
 
     fetchTimePeriods() {
@@ -112,33 +129,35 @@ class ItemContainer extends Component<any, any> {
             .then(() => this.fetchTimePeriods())
     }
 
+    openConfirmDialog(object: any) {
+        this.setState({ confirmDeleteObject: object })
+        this.setState({ confirmDeleteOpen: true })
+    }
+
+    closeConfirmDialog() {
+        this.setState({ confirmDeleteOpen: false })
+    }
+
+    formatTimePeriod(period: any) {
+        if (!period) {
+            return ''
+        }
+        return `${months[period.month - 1]} ${period.year}`
+    }
+
     render() {
         if (!this.state.data) {
             return null
         }
 
-        const months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December'
-        ]
-
         return (
             <>
                 <ConfirmDialog
-                    open={this.state.confirmDeleteId}
-                    title="Delete time period?"
-                    handleClose={() => this.setState( { confirmDeleteId: null })}
-                    handleConfirm={() => this.deleteTimePeriod(this.state.confirmDeleteId)}
+                    open={this.state.confirmDeleteOpen}
+                    title="Delete time period"
+                    description={`Do you want to delete time period ${this.formatTimePeriod(this.state.confirmDeleteObject)}?`}
+                    handleClose={this.closeConfirmDialog}
+                    handleConfirm={() => this.deleteTimePeriod(this.state.confirmDeleteObject.id)}
                 />
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
@@ -155,16 +174,14 @@ class ItemContainer extends Component<any, any> {
                                     sx={{'&:last-child td, &:last-child th': {border: 0}}}>
                                     <TableCell component="th" scope="row">
                                         <Link key={row.id} href={`/periods/${row.id}`}>
-                                            <a>
-                                                {months[row.month - 1]} {row.year}
-                                            </a>
+                                            <a>{this.formatTimePeriod(row)}</a>
                                         </Link>
                                     </TableCell>
                                     <TableCell align="right">
                                         <MuiLink
                                             component="button"
                                             color="inherit"
-                                            onClick={() => this.setState({ confirmDeleteId: row.id })}>
+                                            onClick={() => this.openConfirmDialog(row)}>
                                             <DeleteIcon />
                                         </MuiLink>
                                     </TableCell>

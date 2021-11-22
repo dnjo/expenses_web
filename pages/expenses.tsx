@@ -73,9 +73,11 @@ class ItemContainer extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
-        this.state = {}
+        this.state = { confirmDeleteOpen: false }
         this.componentDidMount = this.componentDidMount.bind(this)
         this.fetchExpenses = this.fetchExpenses.bind(this)
+        this.openConfirmDialog = this.openConfirmDialog.bind(this)
+        this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
     }
 
     fetchExpenses() {
@@ -93,6 +95,15 @@ class ItemContainer extends Component<any, any> {
             .then(() => this.fetchExpenses())
     }
 
+    openConfirmDialog(object: any) {
+        this.setState({ confirmDeleteObject: object })
+        this.setState({ confirmDeleteOpen: true })
+    }
+
+    closeConfirmDialog() {
+        this.setState({ confirmDeleteOpen: false })
+    }
+
     render() {
         if (!this.state.data) {
             return null
@@ -105,10 +116,11 @@ class ItemContainer extends Component<any, any> {
                     handleClose={this.props.handleClose}
                     onSubmitSuccess={this.fetchExpenses} />
                 <ConfirmDialog
-                    open={this.state.confirmDeleteId}
-                    title="Delete expense?"
-                    handleClose={() => this.setState( { confirmDeleteId: null })}
-                    handleConfirm={() => this.deleteExpense(this.state.confirmDeleteId)}
+                    open={this.state.confirmDeleteOpen}
+                    title="Delete expense"
+                    description={`Do you want to delete expense ${this.state.confirmDeleteObject?.title}?`}
+                    handleClose={this.closeConfirmDialog}
+                    handleConfirm={() => this.deleteExpense(this.state.confirmDeleteObject.id)}
                 />
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 650}} aria-label="simple table">
@@ -130,7 +142,7 @@ class ItemContainer extends Component<any, any> {
                                         <MuiLink
                                             component="button"
                                             color="inherit"
-                                            onClick={() => this.setState({ confirmDeleteId: row.id })}>
+                                            onClick={() => this.openConfirmDialog(row)}>
                                             <DeleteIcon />
                                         </MuiLink>
                                     </TableCell>

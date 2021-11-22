@@ -26,11 +26,17 @@ export default class ConfirmDialog extends Component<any, any> {
                     open={this.props.open}
                     onClose={this.props.handleClose}
                     aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
+                    aria-describedby="alert-dialog-description">
                     <DialogTitle id="alert-dialog-title">
                         {this.props.title}
                     </DialogTitle>
+                    {this.props.description && (
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                {this.props.description}
+                            </DialogContentText>
+                        </DialogContent>
+                    )}
                     <DialogActions>
                         <Button onClick={this.props.handleClose}>Cancel</Button>
                         <Button onClick={this.handleConfirm} autoFocus>Delete</Button>
