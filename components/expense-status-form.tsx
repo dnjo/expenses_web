@@ -29,7 +29,8 @@ export default class ExpenseStatusForm extends Component<any, any> {
     handleSubmit() {
         const data = {
             expense_id: this.state.expense,
-            amount: parseInt(this.state.amount) * 100
+            amount: parseInt(this.state.amount) * 100,
+            paid: this.props.editExpenseObject ? this.props.editExpenseObject.paid : false
         }
         if (this.props.editExpenseObject) {
             apiPut(`time_periods/${this.props.id}/expense_statuses/${this.props.editExpenseObject.id}`, data)
