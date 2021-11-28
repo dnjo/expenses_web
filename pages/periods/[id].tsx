@@ -1,12 +1,7 @@
 import type {NextPage} from 'next'
 import React, {Component} from "react";
 import {
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
     Paper,
-    Select,
     SpeedDial,
     SpeedDialIcon,
     Table,
@@ -21,83 +16,9 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {useRouter} from "next/router";
 import MuiLink from '@mui/material/Link';
-import {apiDelete, apiGet, apiPost, apiPut} from "../../common";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import TextField from "@mui/material/TextField";
-import DialogActions from "@mui/material/DialogActions";
+import {apiDelete, apiGet, apiPut} from "../../common";
 import ConfirmDialog from "../../components/confirm-dialog";
-
-class NewExpenseStatusForm extends Component<any, any> {
-    constructor(props: any) {
-        super(props);
-
-        this.state = { expense: '' }
-        this.componentDidMount = this.componentDidMount.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-    }
-
-    componentDidMount() {
-        apiGet('expenses')
-            .then(response => response.json())
-            .then(json => this.setState({ data: json }))
-    }
-
-    handleSubmit() {
-        const data = {
-            expense_id: this.state.expense,
-            amount: parseInt(this.state.amount) * 100
-        }
-        apiPost(`time_periods/${this.props.id}/expense_statuses`, data)
-            .then(response => response.json())
-            .then((expenseStatus) => {
-                this.props.onSubmitSuccess(expenseStatus)
-                this.props.handleClose()
-            })
-    }
-
-    render() {
-        if (!this.state.data) {
-            return null
-        }
-
-        return (
-            <div>
-                <Dialog open={this.props.open} onClose={this.props.handleClose}>
-                    <DialogTitle>New time period expense</DialogTitle>
-                    <DialogContent sx={{ width: 350 }}>
-                        <FormControl variant="standard" fullWidth>
-                            <InputLabel>Expense</InputLabel>
-                            <Select onChange={(e) => this.setState({ expense: e.target.value })} value={this.state.expense}>
-                                {this.state.data.map((i: any) => (
-                                    <MenuItem key={i.id} value={i.id}>
-                                        {i.title}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="expense-status-amount"
-                            label="Amount"
-                            type="number"
-                            fullWidth
-                            variant="standard"
-                            value={this.state.year}
-                            onChange={(e) => this.setState({ amount: e.target.value })}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.props.handleClose}>Cancel</Button>
-                        <Button onClick={this.handleSubmit}>Create</Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-        )
-    }
-}
+import ExpenseStatusForm from "../../components/expense-status-form";
 
 class ItemContainer extends Component<any, any> {
     constructor(props: any) {
@@ -111,6 +32,9 @@ class ItemContainer extends Component<any, any> {
     }
 
     componentDidMount() {
+        apiGet('expenses')
+            .then(response => response.json())
+            .then(json => this.setState({ expenses: json }))
         apiGet(`time_periods/${this.props.id}/expense_statuses`)
             .then(response => response.json())
             .then(json => this.setState({ data: json }))
@@ -152,17 +76,18 @@ class ItemContainer extends Component<any, any> {
     }
 
     render() {
-        if (!this.state.data) {
+        if (!this.state.data || !this.state.expenses) {
             return null
         }
 
         return (
             <>
-                <NewExpenseStatusForm
+                <ExpenseStatusForm
                     open={this.props.open}
                     handleClose={this.props.handleClose}
                     onSubmitSuccess={this.addExpenseStatus}
-                    id={this.props.id} />
+                    id={this.props.id}
+                    expenses={this.state.expenses} />
                 <ConfirmDialog
                     open={this.state.confirmDeleteOpen}
                     title="Delete expense"
@@ -212,7 +137,7 @@ class ItemContainer extends Component<any, any> {
     }
 }
 
-const Id: NextPage = () => {
+const TimePeriod: NextPage = () => {
     const [open, setOpen] = React.useState(false)
     const router = useRouter()
     const {id} = router.query
@@ -233,4 +158,4 @@ const Id: NextPage = () => {
     )
 }
 
-export default Id
+export default TimePeriod
