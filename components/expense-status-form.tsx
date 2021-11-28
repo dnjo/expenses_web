@@ -13,6 +13,17 @@ export default class ExpenseStatusForm extends Component<any, any> {
 
         this.state = { expense: '' }
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.componentDidUpdate = this.componentDidUpdate.bind(this)
+    }
+
+    componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<any>, snapshot?: any) {
+        if (!this.props.editExpenseObject || this.props.editExpenseObject === prevProps.editExpenseObject) {
+            return
+        }
+        this.setState({
+            expense: this.props.editExpenseObject.expense.id,
+            amount: this.props.editExpenseObject.amount / 100
+        })
     }
 
     handleSubmit() {
@@ -20,20 +31,28 @@ export default class ExpenseStatusForm extends Component<any, any> {
             expense_id: this.state.expense,
             amount: parseInt(this.state.amount) * 100
         }
-        const api = this.props.edit ? apiPut : apiPost
-        api(`time_periods/${this.props.id}/expense_statuses`, data)
-            .then(response => response.json())
-            .then((expenseStatus) => {
-                this.props.onSubmitSuccess(expenseStatus)
-                this.props.handleClose()
-            })
+        if (this.props.editExpenseObject) {
+            apiPut(`time_periods/${this.props.id}/expense_statuses/${this.props.editExpenseObject.id}`, data)
+                .then(response => response.json())
+                .then((expenseStatus) => {
+                    this.props.onSubmitSuccess(expenseStatus)
+                    this.props.handleClose()
+                })
+        } else {
+            apiPost(`time_periods/${this.props.id}/expense_statuses`, data)
+                .then(response => response.json())
+                .then((expenseStatus) => {
+                    this.props.onSubmitSuccess(expenseStatus)
+                    this.props.handleClose()
+                })
+        }
     }
 
     render() {
         return (
             <div>
                 <Dialog open={this.props.open} onClose={this.props.handleClose}>
-                    <DialogTitle>{this.props.edit ? 'Update' : 'New'} time period expense</DialogTitle>
+                    <DialogTitle>{this.props.editExpenseObject ? 'Update' : 'New'} time period expense</DialogTitle>
                     <DialogContent sx={{ width: 350 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel>Expense</InputLabel>
@@ -55,13 +74,13 @@ export default class ExpenseStatusForm extends Component<any, any> {
                             type="number"
                             fullWidth
                             variant="standard"
-                            value={this.state.year}
+                            value={this.state.amount}
                             onChange={(e) => this.setState({ amount: e.target.value })}
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.props.handleClose}>Cancel</Button>
-                        <Button onClick={this.handleSubmit}>Create</Button>
+                        <Button onClick={this.handleSubmit}>{this.props.editExpenseObject ? 'Update' : 'Create'}</Button>
                     </DialogActions>
                 </Dialog>
             </div>

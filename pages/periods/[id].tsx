@@ -12,6 +12,7 @@ import {
     TableRow
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {useRouter} from "next/router";
@@ -24,11 +25,15 @@ class ItemContainer extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
-        this.state = { confirmDeleteOpen: false }
+        this.state = {
+            confirmDeleteOpen: false,
+            editExpenseOpen: false
+        }
         this.componentDidMount = this.componentDidMount.bind(this)
         this.openConfirmDialog = this.openConfirmDialog.bind(this)
         this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
         this.addExpenseStatus = this.addExpenseStatus.bind(this)
+        this.updateExpenseStatus = this.updateExpenseStatus.bind(this)
     }
 
     componentDidMount() {
@@ -42,6 +47,16 @@ class ItemContainer extends Component<any, any> {
 
     addExpenseStatus(expenseStatus: any) {
         const expenses = [...this.state.data, expenseStatus]
+        this.setState({ data: expenses })
+    }
+
+    updateExpenseStatus(expenseStatus: any) {
+        const expenses = this.state.data.map((existingStatus: any) => {
+            if (existingStatus.id === expenseStatus.id) {
+                return expenseStatus
+            }
+            return existingStatus
+        })
         this.setState({ data: expenses })
     }
 
@@ -71,6 +86,11 @@ class ItemContainer extends Component<any, any> {
         this.setState({ confirmDeleteOpen: true })
     }
 
+    openEditDialog(object: any) {
+        this.setState({ editExpenseObject: object })
+        this.setState({ editExpenseOpen: true })
+    }
+
     closeConfirmDialog() {
         this.setState({ confirmDeleteOpen: false })
     }
@@ -82,6 +102,13 @@ class ItemContainer extends Component<any, any> {
 
         return (
             <>
+                <ExpenseStatusForm
+                    open={this.state.editExpenseOpen}
+                    handleClose={() => this.setState({ editExpenseOpen: false })}
+                    onSubmitSuccess={this.updateExpenseStatus}
+                    id={this.props.id}
+                    expenses={this.state.expenses}
+                    editExpenseObject={this.state.editExpenseObject} />
                 <ExpenseStatusForm
                     open={this.props.open}
                     handleClose={this.props.handleClose}
@@ -120,6 +147,12 @@ class ItemContainer extends Component<any, any> {
                                         </MuiLink>
                                     </TableCell>
                                     <TableCell align="right">
+                                        <MuiLink
+                                            component="button"
+                                            color="inherit"
+                                            onClick={() => this.openEditDialog(row)}>
+                                            <EditIcon />
+                                        </MuiLink>
                                         <MuiLink
                                             component="button"
                                             color="inherit"
