@@ -7,9 +7,9 @@ export default NextAuth({
             name: `next-auth.session-token`,
             options: {
                 httpOnly: true,
-                sameSite: 'lax',
+                sameSite: 'strict',
                 path: '/',
-                secure: false,
+                secure: process.env.SESSION_TOKEN_SECURE !== 'false',
                 domain: process.env.SESSION_TOKEN_DOMAIN
             }
         }
